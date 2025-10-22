@@ -45,60 +45,56 @@
             border: 2px solid white;
             box-shadow: 0 0 0 2px #c7d2fe;
         }
+        .formula-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .formula-item:last-child {
+            border-bottom: none;
+        }
+        /* Styles for floating results toggle */
+        #results {
+            transition: all 0.3s ease-in-out;
+        }
+        #results.minimized {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        #results.minimized h3,
+        #results.minimized #results-details {
+            display: none;
+        }
+        #results.minimized .text-5xl {
+            font-size: 2.25rem; /* text-4xl */
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
         <header class="text-center mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-indigo-700">京都大学 工学部 2025年度</h1>
             <h2 class="text-xl md:text-2xl font-semibold text-gray-600">入試点数計算アプリ</h2>
         </header>
 
         <main class="space-y-8">
-            <!-- 共通テスト Section -->
-            <section id="common-test" class="bg-white p-6 rounded-2xl shadow-lg">
-                <h3 class="text-2xl font-bold mb-6 border-b-2 border-indigo-200 pb-3 text-indigo-800">大学入学共通テスト (素点: 1000点満点)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    <!-- Subject Inputs -->
-                    <div class="subject-input" data-subject="kyotsu-kokugo" data-max="200"></div>
-                    <div class="subject-input" data-subject="kyotsu-sugaku1a" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-sugaku2bc" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-eng-r" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-eng-l" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-rika1" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-rika2" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-chireki" data-max="100"></div>
-                    <div class="subject-input" data-subject="kyotsu-info" data-max="100"></div>
-                </div>
-            </section>
-
-            <!-- 2次試験 Section -->
-            <section id="secondary-exam" class="bg-white p-6 rounded-2xl shadow-lg">
-                <h3 class="text-2xl font-bold mb-6 border-b-2 border-indigo-200 pb-3 text-indigo-800">個別学力検査 (素点: 650点満点)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                     <!-- Subject Inputs -->
-                    <div class="subject-input" data-subject="niji-kokugo" data-max="100"></div>
-                    <div class="subject-input" data-subject="niji-sugaku" data-max="200"></div>
-                    <div class="subject-input" data-subject="niji-eigo" data-max="150"></div>
-                    <div class="subject-input" data-subject="niji-rika1" data-max="100"></div>
-                    <div class="subject-input" data-subject="niji-rika2" data-max="100"></div>
-                </div>
-            </section>
-
             <!-- 結果表示 Section -->
-            <section id="results" class="bg-indigo-700 text-white p-6 rounded-2xl shadow-2xl sticky top-4 z-10">
+            <section id="results" class="bg-indigo-700 text-white p-6 rounded-2xl shadow-2xl sticky top-4 z-10 cursor-pointer">
                 <h3 class="text-2xl font-bold mb-4 text-center">傾斜配点後 合計点</h3>
                 <div class="text-center text-5xl font-extrabold tracking-tight mb-4">
-                    <span id="total-score-display">0.00</span> / 1075 点
+                    <span id="total-score-display">0.00</span> / 1025 点
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div id="results-details" class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                     <div>
                         <p class="text-sm text-indigo-200">共通テスト</p>
-                        <p class="text-2xl font-bold"><span id="kyotsu-total-scaled">0.00</span> / 250</p>
+                        <p class="text-2xl font-bold"><span id="kyotsu-total-scaled">0.00</span> / 225</p>
                     </div>
                     <div>
                         <p class="text-sm text-indigo-200">個別学力検査</p>
-                        <p class="text-2xl font-bold"><span id="niji-total-scaled">0.00</span> / 825</p>
+                        <p class="text-2xl font-bold"><span id="niji-total-scaled">0.00</span> / 800</p>
                     </div>
                     <div>
                         <p class="text-sm text-indigo-200">共通テスト素点合計</p>
@@ -106,46 +102,67 @@
                     </div>
                 </div>
             </section>
+
+            <!-- 入力エリア -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- 共通テスト Section -->
+                <section id="common-test" class="bg-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 border-b-2 border-indigo-200 pb-3 text-indigo-800">大学入学共通テスト</h3>
+                    <div class="space-y-4">
+                        <div class="subject-input" data-subject="kyotsu-kokugo" data-max="200"></div>
+                        <div class="subject-input" data-subject="kyotsu-chireki" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-sugaku1a" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-sugaku2bc" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-rika1" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-rika2" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-eng-r" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-eng-l" data-max="100"></div>
+                        <div class="subject-input" data-subject="kyotsu-info" data-max="100"></div>
+                    </div>
+                </section>
+
+                <!-- 2次試験 Section -->
+                <section id="secondary-exam" class="bg-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 border-b-2 border-indigo-200 pb-3 text-indigo-800">個別学力検査</h3>
+                    <div class="space-y-4">
+                        <div class="subject-input" data-subject="niji-kokugo" data-max="100"></div>
+                        <div class="subject-input" data-subject="niji-sugaku" data-max="200"></div>
+                        <div class="subject-input" data-subject="niji-rika1" data-max="100"></div>
+                        <div class="subject-input" data-subject="niji-rika2" data-max="100"></div>
+                        <div class="subject-input" data-subject="niji-eigo" data-max="150"></div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- 計算式表示 Section -->
+            <section id="calculation-details" class="bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-2xl font-bold mb-4 text-center text-indigo-800">リアルタイム計算式</h3>
+                <div id="formula-display" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+                    <!-- JavaScript will populate this area -->
+                </div>
+            </section>
         </main>
         
         <footer class="text-center mt-8 text-sm text-gray-500">
-            <p>※この計算は2025年度入学者選抜要項（2024年7月公表）に基づいています。</p>
+            <p>※この計算は2025年度入学者選抜要項（2024年7月公表予定）等の公表情報に基づく予想です。</p>
             <p>※正式な情報については、必ず京都大学の公式ウェブサイトをご確認ください。</p>
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 科目の定義
             const subjects = {
-                // 共通テスト
-                'kyotsu-kokugo': { name: '国語', max: 200 },
-                'kyotsu-sugaku1a': { name: '数学ⅠA', max: 100 },
-                'kyotsu-sugaku2bc': { name: '数学ⅡBC', max: 100 },
-                'kyotsu-eng-r': { name: '英語R', max: 100 },
-                'kyotsu-eng-l': { name: '英語L', max: 100 },
-                'kyotsu-rika1': { name: '理科①', max: 100 },
-                'kyotsu-rika2': { name: '理科②', max: 100 },
-                'kyotsu-chireki': { name: '地歴公民', max: 100 },
-                'kyotsu-info': { name: '情報', max: 100 },
-                // 2次試験
-                'niji-kokugo': { name: '国語', max: 100 },
-                'niji-sugaku': { name: '数学', max: 200 },
-                'niji-eigo': { name: '英語', max: 150 },
-                'niji-rika1': { name: '理科①', max: 100 },
-                'niji-rika2': { name: '理科②', max: 100 },
+                'kyotsu-kokugo': { name: '国語', max: 200 }, 'kyotsu-chireki': { name: '地歴公民', max: 100 }, 'kyotsu-sugaku1a': { name: '数学ⅠA', max: 100 }, 'kyotsu-sugaku2bc': { name: '数学ⅡBC', max: 100 }, 'kyotsu-rika1': { name: '理科①', max: 100 }, 'kyotsu-rika2': { name: '理科②', max: 100 }, 'kyotsu-eng-r': { name: '英語R', max: 100 }, 'kyotsu-eng-l': { name: '英語L', max: 100 }, 'kyotsu-info': { name: '情報', max: 100 },
+                'niji-kokugo': { name: '国語', max: 100 }, 'niji-sugaku': { name: '数学', max: 200 }, 'niji-rika1': { name: '理科①', max: 100 }, 'niji-rika2': { name: '理科②', max: 100 }, 'niji-eigo': { name: '英語', max: 150 },
             };
 
             const subjectInputContainers = document.querySelectorAll('.subject-input');
 
-            // 各科目の入力UIを生成
             subjectInputContainers.forEach(container => {
                 const subjectId = container.dataset.subject;
                 const subjectInfo = subjects[subjectId];
                 if (!subjectInfo) return;
-
-                const defaultValue = Math.floor(subjectInfo.max * 0.8); // デフォルト値を8割に設定
-
+                const defaultValue = Math.round(subjectInfo.max * 0.8);
                 container.innerHTML = `
                     <div class="flex items-center justify-between mb-1">
                         <label for="${subjectId}-num" class="font-semibold text-gray-700">${subjectInfo.name}</label>
@@ -155,69 +172,79 @@
                 `;
             });
             
-            // 全ての入力要素を取得
             const allInputs = document.querySelectorAll('input[type="number"], input[type="range"]');
+            const formulaDisplay = document.getElementById('formula-display');
 
-            // 点数計算と表示更新の関数
             function calculateAndDisplayScores() {
                 const scores = {};
                 for (const id in subjects) {
                     scores[id] = parseFloat(document.getElementById(`${id}-num`).value) || 0;
                 }
                 
-                // 共通テスト傾斜配点計算 (250点満点)
-                const kyotsuKokugoScaled = scores['kyotsu-kokugo'] * (50 / 200);
-                const kyotsuChirekiScaled = scores['kyotsu-chireki'] * (25 / 100);
+                // --- 共通テスト計算 (画像に合わせて修正) ---
+                const kyotsuKokugoScaled = scores['kyotsu-kokugo'] * (25 / 200);
+                const kyotsuChirekiScaled = scores['kyotsu-chireki'] * (50 / 100);
                 const kyotsuSugakuRaw = scores['kyotsu-sugaku1a'] + scores['kyotsu-sugaku2bc'];
-                const kyotsuSugakuScaled = kyotsuSugakuRaw * (50 / 200);
+                const kyotsuSugakuScaled = kyotsuSugakuRaw * (25 / 200);
                 const kyotsuRikaRaw = scores['kyotsu-rika1'] + scores['kyotsu-rika2'];
-                const kyotsuRikaScaled = kyotsuRikaRaw * (50 / 200);
+                const kyotsuRikaScaled = kyotsuRikaRaw * (25 / 200);
                 const kyotsuEigoRaw = scores['kyotsu-eng-r'] + scores['kyotsu-eng-l'];
                 const kyotsuEigoScaled = kyotsuEigoRaw * (50 / 200);
-                const kyotsuInfoScaled = scores['kyotsu-info'] * (25 / 100);
-
+                const kyotsuInfoScaled = scores['kyotsu-info'] * (50 / 100);
                 const kyotsuTotalScaled = kyotsuKokugoScaled + kyotsuChirekiScaled + kyotsuSugakuScaled + kyotsuRikaScaled + kyotsuEigoScaled + kyotsuInfoScaled;
 
-                // 2次試験傾斜配点計算 (825点満点)
-                const nijiKokugoScaled = scores['niji-kokugo'] * (75 / 100);
-                const nijiSugakuScaled = scores['niji-sugaku'] * (300 / 200);
+                // --- 個別学力検査計算 (画像に合わせて修正) ---
+                const nijiKokugoScaled = scores['niji-kokugo']; // 配点100点 -> 100点なのでそのまま
+                const nijiSugakuScaled = scores['niji-sugaku'] * (250 / 200);
                 const nijiRikaRaw = scores['niji-rika1'] + scores['niji-rika2'];
-                const nijiRikaScaled = nijiRikaRaw * (225 / 200);
-                const nijiEigoScaled = scores['niji-eigo'] * (225 / 150);
-
+                const nijiRikaScaled = nijiRikaRaw * (250 / 200);
+                const nijiEigoScaled = scores['niji-eigo'] * (200 / 150);
                 const nijiTotalScaled = nijiKokugoScaled + nijiSugakuScaled + nijiRikaScaled + nijiEigoScaled;
 
-                // 合計点
                 const totalScore = kyotsuTotalScaled + nijiTotalScaled;
+                const kyotsuTotalRaw = Object.keys(subjects).filter(k => k.startsWith('kyotsu-')).reduce((sum, k) => sum + scores[k], 0);
 
-                // 共通テスト素点合計
-                const kyotsuTotalRaw = Object.keys(subjects)
-                    .filter(key => key.startsWith('kyotsu-'))
-                    .reduce((sum, key) => sum + scores[key], 0);
-
-                // 結果を表示
+                // 結果表示
                 document.getElementById('kyotsu-total-scaled').textContent = kyotsuTotalScaled.toFixed(2);
                 document.getElementById('niji-total-scaled').textContent = nijiTotalScaled.toFixed(2);
                 document.getElementById('total-score-display').textContent = totalScore.toFixed(2);
                 document.getElementById('kyotsu-total-raw').textContent = kyotsuTotalRaw;
+
+                // 計算式表示 (修正)
+                let formulaHTML = `
+                    <div>
+                        <h4 class="font-bold text-lg mb-2 border-b border-gray-300 pb-1">共通テスト (→ 225点)</h4>
+                        <div class="space-y-1">
+                            <div class="formula-item"><span>国語:</span> <span>${scores['kyotsu-kokugo']}×(25/200) = <span class="font-semibold">${kyotsuKokugoScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>地歴公民:</span> <span>${scores['kyotsu-chireki']}×(50/100) = <span class="font-semibold">${kyotsuChirekiScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>数学:</span> <span>${kyotsuSugakuRaw}×(25/200) = <span class="font-semibold">${kyotsuSugakuScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>理科:</span> <span>${kyotsuRikaRaw}×(25/200) = <span class="font-semibold">${kyotsuRikaScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>外国語:</span> <span>${kyotsuEigoRaw}×(50/200) = <span class="font-semibold">${kyotsuEigoScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>情報:</span> <span>${scores['kyotsu-info']}×(50/100) = <span class="font-semibold">${kyotsuInfoScaled.toFixed(2)}</span></span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2 border-b border-gray-300 pb-1">個別学力検査 (→ 800点)</h4>
+                        <div class="space-y-1">
+                            <div class="formula-item"><span>国語:</span> <span>${scores['niji-kokugo']}×(100/100) = <span class="font-semibold">${nijiKokugoScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>数学:</span> <span>${scores['niji-sugaku']}×(250/200) = <span class="font-semibold">${nijiSugakuScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>理科:</span> <span>${nijiRikaRaw}×(250/200) = <span class="font-semibold">${nijiRikaScaled.toFixed(2)}</span></span></div>
+                            <div class="formula-item"><span>外国語:</span> <span>${scores['niji-eigo']}×(200/150) = <span class="font-semibold">${nijiEigoScaled.toFixed(2)}</span></span></div>
+                        </div>
+                    </div>
+                `;
+                formulaDisplay.innerHTML = formulaHTML;
             }
 
-            // イベントリスナーを設定
             allInputs.forEach(input => {
                 input.addEventListener('input', (e) => {
-                    const id = e.target.id.replace('-range', '').replace('-num', '');
+                    const id = e.target.id.replace(/-range|-num/, '');
                     const value = e.target.value;
                     const max = subjects[id].max;
 
-                    // 値が範囲外の場合は修正
-                    if (value > max) {
-                        e.target.value = max;
-                    }
-                    if (value < 0) {
-                        e.target.value = 0;
-                    }
+                    if (value > max) e.target.value = max;
+                    if (value < 0) e.target.value = 0;
                     
-                    // スライダーと数値入力を同期
                     document.getElementById(`${id}-range`).value = e.target.value;
                     document.getElementById(`${id}-num`).value = e.target.value;
                     
@@ -225,7 +252,12 @@
                 });
             });
 
-            // 初期計算を実行
+            // --- トグル機能の実装 ---
+            const resultsSection = document.getElementById('results');
+            resultsSection.addEventListener('click', () => {
+                resultsSection.classList.toggle('minimized');
+            });
+
             calculateAndDisplayScores();
         });
     </script>
