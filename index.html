@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京都大学 工学部 2025年度 点数計算アプリ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        /* Custom styles for better slider appearance */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0; /* gray-200 */
+            border-radius: 9999px;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity .2s;
+        }
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4f46e5; /* indigo-600 */
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #c7d2fe; /* indigo-200 */
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #4f46e5;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #c7d2fe;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700">京都大学 工学部 2025年度</h1>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-600">入試点数計算アプリ</h2>
+        </header>
+
+        <main class="space-y-8">
+            <!-- 共通テスト Section -->
+            <section id="common-test" class="bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-2xl font-bold mb-6 border-b-2 border-indigo-200 pb-3 text-indigo-800">大学入学共通テスト (素点: 1000点満点)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <!-- Subject Inputs -->
+                    <div class="subject-input" data-subject="kyotsu-kokugo" data-max="200"></div>
+                    <div class="subject-input" data-subject="kyotsu-sugaku1a" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-sugaku2bc" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-eng-r" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-eng-l" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-rika1" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-rika2" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-chireki" data-max="100"></div>
+                    <div class="subject-input" data-subject="kyotsu-info" data-max="100"></div>
+                </div>
+            </section>
+
+            <!-- 2次試験 Section -->
+            <section id="secondary-exam" class="bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-2xl font-bold mb-6 border-b-2 border-indigo-200 pb-3 text-indigo-800">個別学力検査 (素点: 650点満点)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                     <!-- Subject Inputs -->
+                    <div class="subject-input" data-subject="niji-kokugo" data-max="100"></div>
+                    <div class="subject-input" data-subject="niji-sugaku" data-max="200"></div>
+                    <div class="subject-input" data-subject="niji-eigo" data-max="150"></div>
+                    <div class="subject-input" data-subject="niji-rika1" data-max="100"></div>
+                    <div class="subject-input" data-subject="niji-rika2" data-max="100"></div>
+                </div>
+            </section>
+
+            <!-- 結果表示 Section -->
+            <section id="results" class="bg-indigo-700 text-white p-6 rounded-2xl shadow-2xl sticky top-4 z-10">
+                <h3 class="text-2xl font-bold mb-4 text-center">傾斜配点後 合計点</h3>
+                <div class="text-center text-5xl font-extrabold tracking-tight mb-4">
+                    <span id="total-score-display">0.00</span> / 1075 点
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <p class="text-sm text-indigo-200">共通テスト</p>
+                        <p class="text-2xl font-bold"><span id="kyotsu-total-scaled">0.00</span> / 250</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-indigo-200">個別学力検査</p>
+                        <p class="text-2xl font-bold"><span id="niji-total-scaled">0.00</span> / 825</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-indigo-200">共通テスト素点合計</p>
+                        <p class="text-2xl font-bold"><span id="kyotsu-total-raw">0</span> / 1000</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            <p>※この計算は2025年度入学者選抜要項（2024年7月公表）に基づいています。</p>
+            <p>※正式な情報については、必ず京都大学の公式ウェブサイトをご確認ください。</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 科目の定義
+            const subjects = {
+                // 共通テスト
+                'kyotsu-kokugo': { name: '国語', max: 200 },
+                'kyotsu-sugaku1a': { name: '数学ⅠA', max: 100 },
+                'kyotsu-sugaku2bc': { name: '数学ⅡBC', max: 100 },
+                'kyotsu-eng-r': { name: '英語R', max: 100 },
+                'kyotsu-eng-l': { name: '英語L', max: 100 },
+                'kyotsu-rika1': { name: '理科①', max: 100 },
+                'kyotsu-rika2': { name: '理科②', max: 100 },
+                'kyotsu-chireki': { name: '地歴公民', max: 100 },
+                'kyotsu-info': { name: '情報', max: 100 },
+                // 2次試験
+                'niji-kokugo': { name: '国語', max: 100 },
+                'niji-sugaku': { name: '数学', max: 200 },
+                'niji-eigo': { name: '英語', max: 150 },
+                'niji-rika1': { name: '理科①', max: 100 },
+                'niji-rika2': { name: '理科②', max: 100 },
+            };
+
+            const subjectInputContainers = document.querySelectorAll('.subject-input');
+
+            // 各科目の入力UIを生成
+            subjectInputContainers.forEach(container => {
+                const subjectId = container.dataset.subject;
+                const subjectInfo = subjects[subjectId];
+                if (!subjectInfo) return;
+
+                const defaultValue = Math.floor(subjectInfo.max * 0.8); // デフォルト値を8割に設定
+
+                container.innerHTML = `
+                    <div class="flex items-center justify-between mb-1">
+                        <label for="${subjectId}-num" class="font-semibold text-gray-700">${subjectInfo.name}</label>
+                        <input type="number" id="${subjectId}-num" min="0" max="${subjectInfo.max}" value="${defaultValue}" class="w-20 text-center border-2 border-gray-200 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+                    <input type="range" id="${subjectId}-range" min="0" max="${subjectInfo.max}" value="${defaultValue}" class="w-full">
+                `;
+            });
+            
+            // 全ての入力要素を取得
+            const allInputs = document.querySelectorAll('input[type="number"], input[type="range"]');
+
+            // 点数計算と表示更新の関数
+            function calculateAndDisplayScores() {
+                const scores = {};
+                for (const id in subjects) {
+                    scores[id] = parseFloat(document.getElementById(`${id}-num`).value) || 0;
+                }
+                
+                // 共通テスト傾斜配点計算 (250点満点)
+                const kyotsuKokugoScaled = scores['kyotsu-kokugo'] * (50 / 200);
+                const kyotsuChirekiScaled = scores['kyotsu-chireki'] * (25 / 100);
+                const kyotsuSugakuRaw = scores['kyotsu-sugaku1a'] + scores['kyotsu-sugaku2bc'];
+                const kyotsuSugakuScaled = kyotsuSugakuRaw * (50 / 200);
+                const kyotsuRikaRaw = scores['kyotsu-rika1'] + scores['kyotsu-rika2'];
+                const kyotsuRikaScaled = kyotsuRikaRaw * (50 / 200);
+                const kyotsuEigoRaw = scores['kyotsu-eng-r'] + scores['kyotsu-eng-l'];
+                const kyotsuEigoScaled = kyotsuEigoRaw * (50 / 200);
+                const kyotsuInfoScaled = scores['kyotsu-info'] * (25 / 100);
+
+                const kyotsuTotalScaled = kyotsuKokugoScaled + kyotsuChirekiScaled + kyotsuSugakuScaled + kyotsuRikaScaled + kyotsuEigoScaled + kyotsuInfoScaled;
+
+                // 2次試験傾斜配点計算 (825点満点)
+                const nijiKokugoScaled = scores['niji-kokugo'] * (75 / 100);
+                const nijiSugakuScaled = scores['niji-sugaku'] * (300 / 200);
+                const nijiRikaRaw = scores['niji-rika1'] + scores['niji-rika2'];
+                const nijiRikaScaled = nijiRikaRaw * (225 / 200);
+                const nijiEigoScaled = scores['niji-eigo'] * (225 / 150);
+
+                const nijiTotalScaled = nijiKokugoScaled + nijiSugakuScaled + nijiRikaScaled + nijiEigoScaled;
+
+                // 合計点
+                const totalScore = kyotsuTotalScaled + nijiTotalScaled;
+
+                // 共通テスト素点合計
+                const kyotsuTotalRaw = Object.keys(subjects)
+                    .filter(key => key.startsWith('kyotsu-'))
+                    .reduce((sum, key) => sum + scores[key], 0);
+
+                // 結果を表示
+                document.getElementById('kyotsu-total-scaled').textContent = kyotsuTotalScaled.toFixed(2);
+                document.getElementById('niji-total-scaled').textContent = nijiTotalScaled.toFixed(2);
+                document.getElementById('total-score-display').textContent = totalScore.toFixed(2);
+                document.getElementById('kyotsu-total-raw').textContent = kyotsuTotalRaw;
+            }
+
+            // イベントリスナーを設定
+            allInputs.forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const id = e.target.id.replace('-range', '').replace('-num', '');
+                    const value = e.target.value;
+                    const max = subjects[id].max;
+
+                    // 値が範囲外の場合は修正
+                    if (value > max) {
+                        e.target.value = max;
+                    }
+                    if (value < 0) {
+                        e.target.value = 0;
+                    }
+                    
+                    // スライダーと数値入力を同期
+                    document.getElementById(`${id}-range`).value = e.target.value;
+                    document.getElementById(`${id}-num`).value = e.target.value;
+                    
+                    calculateAndDisplayScores();
+                });
+            });
+
+            // 初期計算を実行
+            calculateAndDisplayScores();
+        });
+    </script>
+</body>
+</html>
